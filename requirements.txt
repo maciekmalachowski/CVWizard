@@ -1,4 +1,5 @@
 llama_index
 llama_index_experimental
 docling
-taipy
+flask
+flask-cors
