@@ -25,6 +25,6 @@ def retrieve_relevant_info(index, query):
 
 
 
-insights_query = "Summarize this CV and highlight key skills."
-insights = retrieve_relevant_info(read_cv("C:/Users/Maciek/Downloads/Resume-EN.pdf"), insights_query)
-print(insights)
+# insights_query = "Summarize this CV and highlight key skills."
+# insights = retrieve_relevant_info(read_cv("C:/Users/Maciek/Downloads/Resume-EN.pdf"), insights_query)
+# print(insights)
