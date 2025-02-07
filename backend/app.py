@@ -63,6 +63,7 @@ def read_cv_route():
 @app.route('/get-job-data', methods=['POST'])
 def get_job_data_route():
     data = request.get_json()
+
     url = data.get('url')
 
     if not url:
@@ -74,27 +75,24 @@ def get_job_data_route():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
 
 @app.route('/get-ai-insights', methods=['POST'])
 def get_ai_insights_route():
-    cv_data, job_data = request.get_json()
-    url = data.get('url')
+    request_data = request.get_json()
 
-    if not url:
-        return jsonify({'error': 'No URL provided'}), 400
+    cv_data = request_data.get('cvData')
+    job_data = request_data.get('jobData')
 
+    # Check if both cv_data and job_data are provided
+    if not cv_data or not job_data:
+        return jsonify({'error': 'Both CV data and job data are required'}), 400
+    
     try:
-        job_data = get_data(url)
-        return jsonify(job_data)
+        # Get AI insights by passing cv_data and job_data to the get_insights function
+        insights = get_insights(cv_data, job_data)
+        
+        # Return the insights as a response
+        return jsonify(insights)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-
-if __name__ == '__main__':
-    app.run(debug=True)

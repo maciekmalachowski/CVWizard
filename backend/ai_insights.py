@@ -53,17 +53,17 @@ def get_insights(cv_data, job_data):
         "suggestions": response.message.content if response else "No suggestions available."
     }
 
-# Example Usage
-cv_insights = {
-    "summary": "John Doe is a software engineer...",
-    "skills": ["Python", "HTML", "Numpy", "Pandas", "Docker", "Java", "Jupyter Notebook", "LLMs", "Langchain", "LlamaIndex", "AutoML", "Scikit-learn", "Hugging Face"],
-    "languages": ["English", "Spanish"]
-}
+# # Example Usage
+# cv_insights = {
+#     "summary": "John Doe is a software engineer...",
+#     "skills": ["Python", "HTML", "Numpy", "Pandas", "Docker", "Java", "Jupyter Notebook", "LLMs", "Langchain", "LlamaIndex", "AutoML", "Scikit-learn", "Hugging Face"],
+#     "languages": ["English", "Spanish"]
+# }
 
-job_data = {
-    "title": "Machine Learning Engineer",
-    "skills": ["Python", "TensorFlow", "Pandas", "Docker", "Kubernetes", "Scikit-learn", "SQL"],
-    "description": "Looking for an ML Engineer with experience in Python, TensorFlow, and Kubernetes."
-}
+# job_data = {
+#     "title": "Machine Learning Engineer",
+#     "skills": ["Python", "TensorFlow", "Pandas", "Docker", "Kubernetes", "Scikit-learn", "SQL"],
+#     "description": "Looking for an ML Engineer with experience in Python, TensorFlow, and Kubernetes."
+# }
 
-print(get_insights(cv_insights, job_data))
+# print(get_insights(cv_insights, job_data))
