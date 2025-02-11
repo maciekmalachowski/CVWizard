@@ -35,7 +35,5 @@ def get_data(link):
 
         return {"title": title, "skills": skills, "description": cleaned_description}
     
-    except requests.exceptions.RequestException as e:
-        return {"error": f"Request failed: {e}"}
     except Exception as e:
         return {"error": f"An error occurred: {e}"}
