@@ -1,22 +1,15 @@
 import React, { useState } from "react";
-import {
-  Upload,
-  Link,
-  AlertCircle,
-  Check,
-  Wand2,
-} from "lucide-react";
+import { Upload, Link, AlertCircle, Check, Wand2 } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { AnalysisResults } from "./components/AnalysisResults";
 import { LoadingState } from "./components/LoadingState";
-import { analyzeCV, AnalysisResponse } from './services/api';
-
+import { getCvData, getJobData, getAiInsights } from "./services/api";
 
 export function App() {
   const [file, setFile] = useState<File | null>(null);
   const [url, setUrl] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [results, setResults] = useState<AnalysisResponse | null>(null);
+  const [aiInsights, setAiInsights] = useState<Record<string, any> | null>(null);
   const [error, setError] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -32,9 +25,6 @@ export function App() {
     onDrop,
     accept: {
       "application/pdf": [".pdf"],
-      "application/msword": [".doc"],
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-        [".docx"],
     },
     maxFiles: 1,
   });
@@ -44,20 +34,39 @@ export function App() {
       setError("Please provide both a CV and a job URL");
       return;
     }
+
+    setIsAnalyzing(true);
+    setError("");
+    setAiInsights(null);
+    setUploadProgress(0);
+
     try {
-      setIsAnalyzing(true);
-      setError("");
-      const result = await analyzeCV(file, url);
-      setResults(result);
+      // Step 1: Upload CV and get insights
+      setUploadProgress(10);
+      const cvResponse = await getCvData(file);
+      setUploadProgress(25);
+
+      // Step 2: Fetch job data
+      setUploadProgress(35);
+      const jobResponse = await getJobData(url);
+      setUploadProgress(50);
+
+      // Step 3: Generate insights
+      setUploadProgress(60);
+      const aiResponse = await getAiInsights(cvResponse, jobResponse);
+      setAiInsights(aiResponse);
+      setUploadProgress(75);
+      
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "An unexpected error occurred",
+        err instanceof Error ? err.message : "An unexpected error occurred"
       );
     } finally {
       setIsAnalyzing(false);
+      setUploadProgress(100);
     }
   };
-  
+
   return (
     <main className="min-h-screen w-full bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4 sm:p-6 md:p-8">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -74,6 +83,7 @@ export function App() {
           </p>
         </header>
         <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 space-y-6 border border-indigo-100">
+          {/* CV Upload Section */}
           <div>
             <h2 className="text-xl font-semibold mb-4 text-slate-800 flex items-center">
               <span className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm mr-2">
@@ -84,11 +94,17 @@ export function App() {
             <div
               {...getRootProps()}
               className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-300
-                ${isDragActive ? "border-indigo-500 bg-indigo-50" : "border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/50"}`}
+                ${
+                  isDragActive
+                    ? "border-indigo-500 bg-indigo-50"
+                    : "border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/50"
+                }`}
             >
               <input {...getInputProps()} />
               <Upload
-                className={`mx-auto h-12 w-12 mb-4 ${isDragActive ? "text-indigo-600" : "text-indigo-500"}`}
+                className={`mx-auto h-12 w-12 mb-4 ${
+                  isDragActive ? "text-indigo-600" : "text-indigo-500"
+                }`}
               />
               <p className="text-slate-600">
                 {isDragActive
@@ -96,7 +112,7 @@ export function App() {
                   : "Drag and drop your CV, or click to select"}
               </p>
               <p className="text-sm text-slate-500 mt-2">
-                Supported formats: PDF, DOC, DOCX
+                Supported formats: PDF
               </p>
             </div>
             {file && (
@@ -106,6 +122,8 @@ export function App() {
               </p>
             )}
           </div>
+
+          {/* Job URL Input */}
           <div>
             <h2 className="text-xl font-semibold mb-4 text-slate-800 flex items-center">
               <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm mr-2">
@@ -126,12 +144,16 @@ export function App() {
               <Link className="h-6 w-6 text-purple-400" />
             </div>
           </div>
+
+          {/* Error Message */}
           {error && (
             <div className="flex items-center space-x-2 text-red-600 bg-red-50 p-3 rounded-lg">
               <AlertCircle className="h-5 w-5" />
               <span>{error}</span>
             </div>
           )}
+
+          {/* Analyze Button */}
           <button
             onClick={handleAnalyze}
             disabled={isAnalyzing || !file || !url}
@@ -142,8 +164,14 @@ export function App() {
             {isAnalyzing ? "Analyzing..." : "Analyze CV"}
           </button>
         </div>
+
+        {/* Loading State */}
         {isAnalyzing && <LoadingState progress={uploadProgress} />}
-        {results && <AnalysisResults results={results} />}
+
+        {/* Results */}
+        {aiInsights && (
+          <AnalysisResults aiInsights={aiInsights} />
+        )}
       </div>
     </main>
   );
