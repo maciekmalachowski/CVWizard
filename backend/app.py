@@ -3,7 +3,7 @@ from flask_cors import CORS
 from scrapper import get_data
 from cv_reader import read_cv, retrieve_relevant_info
 from ai_insights import get_insights
-import tempfile  # Used for temporary file storage
+import tempfile
 
 # Initialize the Flask app
 app = Flask(__name__)
