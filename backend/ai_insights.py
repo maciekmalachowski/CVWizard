@@ -2,11 +2,17 @@ from llama_index.llms.openai import OpenAI
 from llama_index.core.llms import ChatMessage
 from dotenv import load_dotenv
 
+# -------------------------------
+# Function to generate AI-powered CV insights
+# -------------------------------
+
 def get_insights(cv_data, job_data):
     load_dotenv()
     # Extract relevant details
     cv_summary = cv_data.get("summary", "No summary available.")
     cv_skills = set(cv_data.get("skills", []))
+    languages = set(cv_data.get("languages", []))
+    cv_skills = cv_skills | languages
     job_title = job_data.get("title", "No title available.")
     job_description = job_data.get("description", "No description available.")
     job_skills = set(job_data.get("skills", []))
@@ -18,11 +24,11 @@ def get_insights(cv_data, job_data):
     # Calculate alignment score
     alignment_score = round((len(matched_keywords) / len(job_skills)) * 100, 0) if job_skills else 0
     
-    # Generate AI-powered improvement suggestions
+    # Use gpt-4-turbo model as llm
     llm = OpenAI(model="gpt-4-turbo")
 
     messages = [
-        # System message: Defines AI's role and structured response format
+        # System message:
         ChatMessage(role="system", content="""
         You are an expert career advisor helping candidates tailor their CV to job requirements. 
         Provide **clear, structured, and actionable** feedback using **bullet points** for easy readability.

@@ -5,21 +5,36 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 from dotenv import load_dotenv
 import json
 
+# -------------------------------
+# Function to Read and Process a CV
+# -------------------------------
+
 def read_cv(source):
     load_dotenv()
-    reader = DoclingReader()
+
+    # Initialize document reader and Markdown parser
+    reader = DoclingReader() 
     node_parser = MarkdownNodeParser()
+    # Set up OpenAI embedding model
     embed_model = OpenAIEmbedding(model="text-embedding-3-large")
 
+    # Create a vector index of the document with parsed nodes and embeddings
     index = VectorStoreIndex.from_documents(
         documents=reader.load_data(source),
         transformations=[node_parser],
         embed_model=embed_model
     )
 
+    # Return the processed CV index
     return index
 
-def retrieve_relevant_info(index):
+
+# -------------------------------
+# Function to Extract Key Information from the CV
+# -------------------------------
+
+def retrieve_relevant_info(index):    
+    # Query prompt to extract structured data from the CV
     query = """
         Extract key skills, spoken languages, and a summary from the given CV.
 
@@ -36,13 +51,16 @@ def retrieve_relevant_info(index):
         }
 
         Ensure the AI carefully considers each job and project and accurately identifies skills and languages. The summary should be **concise yet informative**, capturing the candidate’s key strengths and accomplishments in natural language. Do not include any additional text, explanations, or formatting outside of this JSON structure.
-        """
-    
+    """
+    # Initialize the query engine
     query_engine = index.as_query_engine()
+    # Perform the query  
     response = query_engine.query(query)
-    
+
     try:
-        return json.loads(response.response)  # Convert string response to dictionary
+        # Convert AI response (JSON string) into a Python dictionary
+        return json.loads(response.response) 
     except json.JSONDecodeError:
+        # Handle potential formatting issues
         print("Error: AI response is not valid JSON. Check the query formatting.")
-        return None  # Handle potential formatting issues
+        return None  
