@@ -1,7 +1,6 @@
 import React from "react";
 import { Check, X, ChevronRight, Sparkles } from "lucide-react";
 import { RadialBarChart, RadialBar, ResponsiveContainer } from "recharts";
-import ReactMarkdown from 'react-markdown';
 import parse from 'html-react-parser';
 
 interface AnalysisResultsProps {
