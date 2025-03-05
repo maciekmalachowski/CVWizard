@@ -27,6 +27,7 @@
 - [📁 Project Structure](#-project-structure)
   - [📂 Project Index](#-project-index)
 - [🚀 Getting Started](#-getting-started)
+  - [☑️ Prerequisites](#-prerequisites)
   - [⚙️ Installation](#-installation)
   - [🤖 Usage](#🤖-usage)
 - [🎗 License](#-license)
@@ -228,3 +229,90 @@ CVWizard is an innovative web application designed to enhance job application su
 	</details>
 </details>
 
+---
+## 🚀 Getting Started
+
+### ☑️ Prerequisites
+
+Before getting started with **CV Wizard**, ensure your runtime environment meets the following requirements:
+
+- **Backend:**
+  - Python `^3.10`
+  - **Pip** for dependency management
+  
+- **Frontend:**
+  - Node.js `^18.x`
+  - **npm** or **yarn** as a package manager
+  - Modern browser for running the app
+  
+### ⚙️ Installation
+
+Install CVWizard using one of the following methods:
+
+**Build from source:**
+
+1. Clone the CVWizard repository:
+```sh
+git clone https://github.com/maciekmalachowski/CVWizard
+```
+
+2. Navigate to the project directory:
+```sh
+cd CVWizard
+```
+
+3. Install Backend Dependencies:
+```sh
+cd backend
+pip install -r requirements.txt
+```
+
+Create a `.env` file in the *backend/* folder with the following **OpenAI API** key:
+```sh
+OPENAI_API_KEY=your_api_key_here
+```
+
+3. Install Frontend Dependencies:
+```sh
+cd frontend
+npm install
+```
+
+
+
+### 🤖 Usage
+
+**Run Backend:**
+
+Navigate to the backend folder and start the Flask server:
+```sh
+cd backend
+flask run
+```
+
+Backend will run on `http://localhost:5000` with *Flask-CORS* enabled to match requests from the frontend.
+
+**Run Frontend:**
+
+Open a new terminal window and start the frontend:
+```sh
+cd frontend
+npm run dev
+```
+
+Frontend will run on `http://localhost:5173`.
+
+## 🔧 API Endpoints
+
+| Method | Endpoint           | Description                                    |
+|--------|------------------|-----------------------------------------------|
+| POST   | `/read-cv`       | Upload and process CV                         |
+| POST   | `/get-job-data`   | Scrape job description from URL              |
+| POST   | `/get-ai-insights` | Generate AI insights comparing CV and job requirements |
+
+
+## 🎗 License
+
+This project is protected under the [MIT](https://github.com/maciekmalachowski/CVWizard/blob/main/LICENSE) License.
+
+---
