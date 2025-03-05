@@ -3,3 +3,4 @@ llama_index_experimental
 docling
 flask
 flask-cors
+beautifulsoup4
