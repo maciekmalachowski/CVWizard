@@ -38,6 +38,8 @@
 
 CVWizard is an innovative web application designed to enhance job application success by aligning CVs with specific job descriptions. Utilizing AI-driven analysis, it extracts and compares skills from uploaded CVs against job requirements, offering tailored advice for optimization. Ideal for job seekers aiming to boost their marketability, CVWizard simplifies the process of tailoring resumes to meet targeted job criteria effectively.
 
+<p align="center"><img src="media/usage.gif"></p>
+
 ---
 
 ## 👾 Features
